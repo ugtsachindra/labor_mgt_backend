@@ -8,8 +8,8 @@ class Role extends Model
 {
     protected $guarded = [];
 
-    public function users(){
-        return $this->belongsToMany('App\User');
+    public function user_projects(){
+        return $this->hasMany('App\UserProjectRole');
     }
 
     

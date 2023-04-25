@@ -16,10 +16,6 @@ class Employee extends Model
         return $this->belongsTo('App\EmployeementType');
     }
 
-    public function agreement(){
-        return $this->belongsTo('App\Agreement');
-    }
-
     public function project(){
         return $this->belongsTo('App\Project');
     }

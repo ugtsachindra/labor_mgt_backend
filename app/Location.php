@@ -12,4 +12,8 @@ class Location extends Model
         return $this->belongsTo('App\Section');
     }
 
+    public function rates(){
+        return $this->hasMany('App\EmployeeActivity');
+    }
+
 }

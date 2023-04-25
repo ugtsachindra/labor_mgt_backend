@@ -18,7 +18,11 @@ class EmployeeActivity extends Model
     }
 
     public function activity(){
-        return $this->belongsTo('App\Activity');
+        return $this->belongsTo('App\ActivityProject');
+    }
+
+    public function location(){
+        return $this->belongsTo('App\Location');
     }
     
 }

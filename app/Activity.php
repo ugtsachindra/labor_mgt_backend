@@ -10,7 +10,7 @@ class Activity extends Model
 
     public function projects (){
 
-        return $this->belongsTo('App\Project');
+        return $this->belongsTo('App\ActivityProject');
         
     }
 }

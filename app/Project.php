@@ -15,4 +15,8 @@ class Project extends Model
     public function sections(){
         return $this->hasMany('App\Section');
     }
+
+    public function acivities(){
+        return $this->hasMany('App\ActivityProject');
+    }
 }

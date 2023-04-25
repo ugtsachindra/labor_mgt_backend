@@ -12,5 +12,7 @@ class EmployeeCategory extends Model
         return $this->hasMany('App\Employee');
     }
 
-     
+     public function rates(){
+        return $this->hasMany('App\AgreementRate');
+     }
 }

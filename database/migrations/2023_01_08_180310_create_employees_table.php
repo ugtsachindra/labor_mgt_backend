@@ -17,7 +17,6 @@ class CreateEmployeesTable extends Migration
             $table->id();
             $table->unsignedInteger('employee_category_id');
             $table->unsignedInteger('employeement_type_id');
-            $table->unsignedInteger('agreement_id')->nullable();
             $table->unsignedInteger('project_id')->nullable();
             $table->unsignedInteger('supplier_id')->nullable();
             $table->string('emp_no')->nullable();
