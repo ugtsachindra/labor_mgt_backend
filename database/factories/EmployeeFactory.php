@@ -9,7 +9,7 @@ $factory->define(Employee::class, function (Faker $faker) {
     return [
         'employee_category_id'=>factory(App\EmployeeCategory::class),
         'employeement_type_id'=>factory(App\EmployeementType::class),
-        'agreement_id'=>factory(App\Agreement::class),
+        
         'project_id'=>factory(App\Project::class),
         'supplier_id'=>factory(App\Supplier::class),
          'emp_no'=> $faker->unique()->numerify('X####'),

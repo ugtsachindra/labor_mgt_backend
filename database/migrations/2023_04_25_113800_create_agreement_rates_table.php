@@ -15,6 +15,9 @@ class CreateAgreementRatesTable extends Migration
     {
         Schema::create('agreement_rates', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('agreement_id');
+            $table->unsignedInteger('employee_category_id');
+            $table->double('rate');
             $table->timestamps();
         });
     }

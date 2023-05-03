@@ -17,4 +17,8 @@ class Agreement extends Model
 
         return $this->belongsTo('App\Suplier');
     }
+
+    public function rates(){
+        return $this->hasMany('App\AgreementRate');
+    }
 }
