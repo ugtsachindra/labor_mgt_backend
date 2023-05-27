@@ -17,6 +17,7 @@ class CreateLocationsTable extends Migration
             $table->id();
             $table->unsignedInteger('section_id');
             $table->string('name');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

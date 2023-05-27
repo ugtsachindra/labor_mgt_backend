@@ -17,6 +17,7 @@ class CreateSectionsTable extends Migration
             $table->id();
             $table->unsignedInteger('project_id');
             $table->string('name');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

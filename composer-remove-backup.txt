@@ -1,0 +1,2 @@
+  "fzaninotto/faker": "^1.9.1",
+  "laravel/passport": "^11.8",

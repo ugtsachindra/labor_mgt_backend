@@ -17,6 +17,7 @@ class CreateContractsTable extends Migration
             $table->id();
             $table->string('code');
             $table->string('name');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

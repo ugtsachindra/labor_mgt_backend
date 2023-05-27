@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
@@ -14,7 +15,24 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        try{
+
+            $project = Project::all();
+
+            return response()->json([
+                "status"=>true,
+                "message"=>"All the projects",
+                "data"=>$project
+            ]);
+
+        }catch(\Throwable $th){
+            return response()->json([
+                "status"=>false,
+                "message"=>$th,
+                
+            ]);
+
+        }
     }
 
     /**
@@ -35,7 +53,27 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            DB::beginTransaction();
+
+            $project = new Project();
+            $project->contract_id=$request->contract_id;
+            $project->name=$request->name;
+            $project->active=$request->active;
+
+            $project->save();
+            DB::commit();
+            return response()->json([
+                "status"=>true,
+                "message"=>"Contract Saved successfully"
+            ]);
+
+        }catch(\Throwable $th){
+            return response()->json([
+                "status"=>false,
+                "message"=>$th
+            ]);
+        }
     }
 
     /**
@@ -67,9 +105,39 @@ class ProjectController extends Controller
      * @param  \App\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
+    public function update(Request $request,$id)
     {
-        //
+        
+
+        try{
+
+            $project = Project::find($id);
+
+            if (!is_null($project)) {
+                DB::beginTransaction();
+                $project->active=$request->active;
+                $project->name=$request->name;
+                $project->contract_id=$request->contract_id;
+                $project->update();
+                DB::commit();
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"Project updated successfully"
+                ]);
+            } else {
+                return response()->json([
+                    "status"=>false,
+                    "message"=>"Requested project not found"
+                ]);
+            }
+            
+
+        }catch(\Throwable $th){
+            return response()->json([
+                "status"=>false,
+                "message"=>$th
+            ]);
+        }
     }
 
     /**

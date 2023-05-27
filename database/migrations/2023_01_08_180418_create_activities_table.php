@@ -18,6 +18,7 @@ class CreateActivitiesTable extends Migration
             $table->unsignedInteger('project_id');
             $table->string('code');
             $table->string('description');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
