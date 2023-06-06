@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class ProjectController extends Controller
 {
@@ -53,27 +55,46 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            DB::beginTransaction();
+        
+        $validator = Validator::make($request->all(),[
+            'contract_id'=>'required',
+            'name'=>'required',
+            'active'=>'required'
+        ]);
 
-            $project = new Project();
-            $project->contract_id=$request->contract_id;
-            $project->name=$request->name;
-            $project->active=$request->active;
+        if (!$validator->fails()) {
+            
+            try{
+                DB::beginTransaction();
+    
+                $project = new Project();
+                $project->contract_id=$request->contract_id;
+                $project->name=$request->name;
+                $project->active=$request->active;
+    
+                $project->save();
+                DB::commit();
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"Contract Saved successfully"
+                ]);
+    
+            }catch(\Throwable $th){
+                return response()->json([
+                    "status"=>false,
+                    "message"=>$th
+                ]);
+            }
 
-            $project->save();
-            DB::commit();
+        } else {
             return response()->json([
-                "status"=>true,
-                "message"=>"Contract Saved successfully"
-            ]);
-
-        }catch(\Throwable $th){
-            return response()->json([
-                "status"=>false,
-                "message"=>$th
-            ]);
+                    "status"=>false,
+                    "message"=>$validator->errors()->toJson()
+                ]);
         }
+        
+
+        
     }
 
     /**
@@ -82,9 +103,15 @@ class ProjectController extends Controller
      * @param  \App\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show($id)
     {
-        //
+        $project = Project::find($id);
+        return response()->json([
+            "status"=>true,
+            "message"=>"Contract Saved successfully",
+            "data"=>$project
+        ]);
+
     }
 
     /**
@@ -107,37 +134,53 @@ class ProjectController extends Controller
      */
     public function update(Request $request,$id)
     {
-        
+        $validator = Validator::make($request->all(),[
+            'contract_id'=>'required',
+            'name'=>'required',
+            'ative'=>'required'
+        ]);
 
-        try{
+        if (!$validator->fails()) {
+            
+            try{
 
-            $project = Project::find($id);
-
-            if (!is_null($project)) {
-                DB::beginTransaction();
-                $project->active=$request->active;
-                $project->name=$request->name;
-                $project->contract_id=$request->contract_id;
-                $project->update();
-                DB::commit();
-                return response()->json([
-                    "status"=>true,
-                    "message"=>"Project updated successfully"
-                ]);
-            } else {
+                $project = Project::find($id);
+    
+                if (!is_null($project)) {
+                    DB::beginTransaction();
+                    $project->active=$request->active;
+                    $project->name=$request->name;
+                    $project->contract_id=$request->contract_id;
+                    $project->update();
+                    DB::commit();
+                    return response()->json([
+                        "status"=>true,
+                        "message"=>"Project updated successfully"
+                    ]);
+                } else {
+                    return response()->json([
+                        "status"=>false,
+                        "message"=>"Requested project not found"
+                    ]);
+                }
+                
+    
+            }catch(\Throwable $th){
                 return response()->json([
                     "status"=>false,
-                    "message"=>"Requested project not found"
+                    "message"=>$th
                 ]);
             }
-            
 
-        }catch(\Throwable $th){
+        } else {
             return response()->json([
-                "status"=>false,
-                "message"=>$th
-            ]);
+                    "status"=>false,
+                    "message"=>$validator->errors()->toJson()
+                ]);
         }
+        
+
+        
     }
 
     /**
@@ -148,6 +191,31 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+
+              
+        try{
+            
+
+            if(!is_null($project)){
+
+                $response = $project->delete();
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"Project deleted"
+                ]);
+
+            }else{
+                return response()->json([
+                    "status"=>false,
+                    "message"=>"Project not found"
+                ]);
+            }
+
+        }catch(Throwable $th){
+            return response()->json([
+                "status"=>false,
+                "message"=>$th
+            ]);
+        }
     }
 }

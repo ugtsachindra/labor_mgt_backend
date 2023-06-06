@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::post("user-register",[UserController::class, "register"]);
 Route::post("login",[UserController::class, "login"]);
 
+
+
 Route::group(["middleware" => ["auth:api"]], function(){
 
     Route::get("profile", [UserController::class,"profile"]);
@@ -29,10 +31,14 @@ Route::group(["middleware" => ["auth:api"]], function(){
     Route::post("contract/save",[ContractController::class,"save"]);
 
     Route::get("project",[ProjectController::class,"index"]);
+    Route::get("project/{id}",[ProjectController::class,"show"]);
     Route::post("project",[ProjectController::class,"store"]);
     Route::put("project/{id}",[ProjectController::class,"update"]);
+    Route::delete("project/{project}",[ProjectController::class,"destroy"]);
 
 });
+
+    
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();

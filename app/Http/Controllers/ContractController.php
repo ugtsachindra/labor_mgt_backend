@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ContractController extends Controller
 {
@@ -27,30 +28,47 @@ class ContractController extends Controller
 
     public function save(Request $request){
 
+        $validator = Validator::make($request->all(),[
+            'name'=>'required',
+            'code'=>'required',
+            'active'=>'required'
+        ]);
 
-        try {
-
-            DB::beginTransaction();
+        if (!$validator->fails()) {
             
-            $contract = new Contract();
-            $contract->code = $request->code;
-            $contract->name = $request->name;
-            $contract->active = $request->active;
-            $contract->save();
-            DB::commit();
+            try {
 
-            return response()->json([
-                "status"=>true,
-                "message"=>"Contract Saved successfully"
-            ]);
+                DB::beginTransaction();
+                
+                $contract = new Contract();
+                $contract->code = $request->code;
+                $contract->name = $request->name;
+                $contract->active = $request->active;
+                $contract->save();
+                DB::commit();
+    
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"Contract Saved successfully"
+                ]);
+                
             
-        
-        } catch (\Throwable $th) {
+            } catch (\Throwable $th) {
+                return response()->json([
+                    "status"=>false,
+                    "message"=>$th
+                ]);
+            }
+
+        } else {
             return response()->json([
-                "status"=>false,
-                "message"=>$th
-            ]);
+                    "status"=>false,
+                    "message"=>$validator->errors()->toJson()
+                ]);
         }
+        
+
+        
         
 
     }
@@ -107,45 +125,63 @@ class ContractController extends Controller
      */
     public function update(Request $request, $id)
     {
-       
-        try {
+        $validator = Validator::make($request->all(),[
+            'name'=>'required',
+            'code'=>'required',
+            'active'=>'required'
+        ]);
 
-            DB::beginTransaction();
-            $contract = Contract::find($id);
+        if (!$validator->fails()) {
             
-        if (!is_null($contract)) {
-            $contract->code = $request->code;
-            $contract->name = $request->name;
-            $contract->active = $request->active;
-            $contract->update();
-            DB::commit();
+
+            try {
+
+                DB::beginTransaction();
+                $contract = Contract::find($id);
+                
+            if (!is_null($contract)) {
+                $contract->code = $request->code;
+                $contract->name = $request->name;
+                $contract->active = $request->active;
+                $contract->update();
+                DB::commit();
+                
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"Contract Updated successfully"
+                ]);
+            } else {
+                $contract = new Contract();
+                $contract->code = $request->code;
+                $contract->name = $request->name;
+                $contract->active = $request->active;
+                $contract->save();
+                DB::commit();
+    
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"Contract Saved successfully"
+                ]);
+                
+            }
+    
             
-            return response()->json([
-                "status"=>true,
-                "message"=>"Contract Updated successfully"
-            ]);
+            } catch (\Throwable $th) {
+                return response()->json([
+                    "status"=>false,
+                    "message"=>$th
+                ]);
+            }
+
         } else {
-            $contract = new Contract();
-            $contract->code = $request->code;
-            $contract->name = $request->name;
-            $contract->active = $request->active;
-            $contract->save();
-            DB::commit();
-
             return response()->json([
-                "status"=>true,
-                "message"=>"Contract Saved successfully"
-            ]);
-            
+                    "status"=>false,
+                    "message"=>$validator->errors()->toJson()
+                ]);
         }
-
         
-        } catch (\Throwable $th) {
-            return response()->json([
-                "status"=>false,
-                "message"=>$th
-            ]);
-        }
+       
+        
         
 
     }

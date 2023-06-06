@@ -9,5 +9,6 @@ $factory->define(Project::class, function (Faker $faker) {
     return [
         'name'=> $faker-> name,
         'contract_id' => factory(App\Contract::class),
+        'active'=>$faker->boolean()
     ];
 });
