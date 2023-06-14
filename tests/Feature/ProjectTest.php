@@ -75,4 +75,16 @@ class ProjectTest extends TestCase
 
         $this->assertDatabaseMissing('projects',['id'=>$project->id]);
     }
+
+    public function test_fetch_active_projects(){
+
+        $location1 = factory(Project::class)->create(['active'=>false]);
+        
+        $location2 = factory(Project::class)->create(['active'=>true]);
+        
+        $response = $this->getJson('api/project_active')->assertOk()->json();
+        
+        $this->assertEquals(1,count($response['data']));
+
+    }
 }

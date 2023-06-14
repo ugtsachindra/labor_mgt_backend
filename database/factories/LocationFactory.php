@@ -9,5 +9,6 @@ $factory->define(Location::class, function (Faker $faker) {
     return [
         'name'=> $faker->name,
         'section_id'=>factory(App\Section::class),
+        'active'=>$faker->boolean()
     ];
 });

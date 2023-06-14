@@ -12,5 +12,6 @@ $factory->define(Supplier::class, function (Faker $faker) {
         'name' => $faker->name,
         'email' => $faker->email,
         'phone' => $faker->phoneNumber,
+        'active'=>$faker->boolean()
     ];
 });

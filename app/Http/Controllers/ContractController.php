@@ -6,6 +6,7 @@ use App\Contract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class ContractController extends Controller
 {
@@ -194,6 +195,39 @@ class ContractController extends Controller
      */
     public function destroy(Contract $contract)
     {
-        //
+        try {
+            $contract->delete();
+
+            return response([
+                "status"=>true,
+                "message"=>"Contract deleted successfully"
+            ],Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response([
+                "status"=>true,
+                "message"=>$th
+            ],Response::HTTP_BAD_REQUEST);
+        }
     }
+
+    public function active()
+    {
+        try {
+            $contract = DB::table('contracts')->where('active','=',true)
+            ->orderBy('name','asc')->get();
+            return response([
+                'status'=>true,
+                'message'=>'active contracts',
+                'data'=>$contract
+            ],Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status"=>false,
+                "message"=>$th,
+                
+            ],Response::HTTP_PRECONDITION_FAILED);
+        }
+    }
+
+
 }

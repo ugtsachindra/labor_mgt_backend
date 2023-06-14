@@ -6,6 +6,7 @@ use App\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class ProjectController extends Controller
@@ -76,7 +77,7 @@ class ProjectController extends Controller
                 DB::commit();
                 return response()->json([
                     "status"=>true,
-                    "message"=>"Contract Saved successfully"
+                    "message"=>"Contract saved successfully"
                 ]);
     
             }catch(\Throwable $th){
@@ -216,6 +217,26 @@ class ProjectController extends Controller
                 "status"=>false,
                 "message"=>$th
             ]);
+        }
+    }
+
+    public function active(){
+
+
+        try {
+            $projects = DB::table('projects')->where('active','=',true)
+            ->orderBy('name','asc')->get();
+            return response([
+                'status'=>true,
+                'message'=>'active projects',
+                'data'=>$projects
+            ],Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status"=>false,
+                "message"=>$th,
+                
+            ],Response::HTTP_PRECONDITION_FAILED);
         }
     }
 }
